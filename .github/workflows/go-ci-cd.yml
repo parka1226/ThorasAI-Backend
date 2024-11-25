@@ -22,6 +22,16 @@ jobs:
       uses: actions/setup-go@v4
       with:
         go-version: '1.21' # Specify your Go version
+  
+    # Set up GolangCI-Lint
+    - name: Set up GolangCI-Lint
+      uses: golangci/golangci-lint-action@v3
+      with:
+        version: 'v1.50.0'  # Specify the version of GolangCI-Lint
+
+    # Run Linter
+    - name: Run Linter
+      run: golangci-lint run --timeout 5m
 
     # Install dependencies
     - name: Install Dependencies
@@ -43,7 +53,6 @@ jobs:
     steps:
     # Checkout the repository
     - name: Checkout code
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
-        ref: 'main'  # Specify the branch or tag explicitly
-
+        ref: 'main' 
