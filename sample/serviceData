@@ -1,0 +1,32 @@
+[
+  {
+    "name": "Login Service",
+    "ip_address": "10.128.72.69",
+    "listening_port": 443
+  },
+  {
+    "name": "Auth",
+    "ip_address": "10.128.72.20",
+    "listening_port": 443
+  },
+  {
+    "name": "Matchmaking Service",
+    "ip_address": "10.128.12.60",
+    "listening_port": 443
+  },
+  {
+    "name": "User Profile DB",
+    "ip_address": "10.128.24.14",
+    "listening_port": 5432
+  },
+  {
+    "name": "Gaming Service",
+    "ip_address": "10.128.72.12",
+    "listening_port": 2600
+  },
+  {
+    "name": "Gaming UI",
+    "ip_address": "10.128.72.14",
+    "listening_port": 443
+  }
+]

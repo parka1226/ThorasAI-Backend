@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  mongodb:
+    image: mongo
+    container_name: mongodb
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_ROOT_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_ROOT_PASSWROD}
+
+version: '3'
+services:
+  minikube:
+    image: gcr.io/k8s-minikube/minikube:v1.28.0
+    container_name: minikube
+    privileged: true  # Necessary for Docker inside Docker
+    environment:
+      - MINIKUBE_HOME=/minikube
+      - CHANGE_MINIKUBE_NONE_USER=true
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock  # So Minikube can access Docker
+    command:
+      - /bin/bash
+      - -c
+      - |
+        minikube start --driver=docker
+        tail -f /dev/null  # Keep the container running
+    ports:
+      - "8443:8443"  # Minikube's K8s API port
+    restart: always

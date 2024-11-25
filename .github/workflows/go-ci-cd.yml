@@ -1,0 +1,49 @@
+name: Go CI/CD Workflow
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+    # Checkout the repository
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    # Set up Go environment
+    - name: Setup Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.21' # Specify your Go version
+
+    # Install dependencies
+    - name: Install Dependencies
+      run: go mod tidy
+
+    # Run unit tests
+    - name: Run Tests
+      run: go test ./... -v
+
+    # Build the application
+    - name: Build Application
+      run: go build -o myapp ./cmd/main.go
+
+  deploy:
+    needs: build-and-test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' # Deploy only from the main branch
+
+    steps:
+    # Checkout the repository
+    - name: Checkout code
+      uses: actions/checkout@v2
+      with:
+        ref: 'main'  # Specify the branch or tag explicitly
+
