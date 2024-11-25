@@ -12,6 +12,12 @@ jobs:
   build-and-test:
     runs-on: ubuntu-latest
 
+    services:
+      mongo:
+        image: mongo:latest
+        options: --health-cmd="curl --silent --fail localhost:27017" --health-timeout=5s --health-retries=5 --health-start-period=10s --publish 27017:27017
+        # This starts a MongoDB container on the default port 27017
+
     steps:
     # Checkout the repository
     - name: Checkout Code
@@ -21,13 +27,13 @@ jobs:
     - name: Setup Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.21' # Specify your Go version
+        go-version: '1.21' 
   
     # Set up GolangCI-Lint
     - name: Set up GolangCI-Lint
       uses: golangci/golangci-lint-action@v3
       with:
-        version: 'v1.50.0'  # Specify the version of GolangCI-Lint
+        version: 'v1.50.0'  
 
     # Run Linter
     - name: Run Linter
@@ -37,9 +43,17 @@ jobs:
     - name: Install Dependencies
       run: go mod tidy
 
-    # Run unit tests
+    # Run unit tests (including MongoDB-related tests)
     - name: Run Tests
-      run: go test ./... -v
+      run: |
+        # Wait for MongoDB to be ready
+        echo "Waiting for MongoDB to start..."
+        sleep 10  # Ensure MongoDB is fully ready
+
+        # Run your tests
+        go test ./... -v
+      env:
+        MONGO_URI: ${{ secrets.MONGO_URI }}  # MongoDB URI stored in GitHub secrets
 
     # Build the application
     - name: Build Application
@@ -48,11 +62,17 @@ jobs:
   deploy:
     needs: build-and-test
     runs-on: ubuntu-latest
-    if: github.ref == 'refs/heads/main' # Deploy only from the main branch
+    if: github.ref == 'refs/heads/main'  # Deploy only from the main branch
 
     steps:
     # Checkout the repository
     - name: Checkout code
       uses: actions/checkout@v3
       with:
-        ref: 'main' 
+        ref: 'main'
+
+    # Set up Kubernetes client (if deploying to Kubernetes)
+    - name: Set up Kubernetes
+      uses: azure/setup-kubectl@v3
+      with:
+        version: 'v1.23.0'

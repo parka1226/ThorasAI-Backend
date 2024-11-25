@@ -12,7 +12,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestFilterLogsHandler(t *testing.T) {
+func TestAPIRoute(t *testing.T) {
 	t.Run("Success", func(t *testing.T) {
 		requestBody := map[string]interface{}{
 			"database":          "testdb",

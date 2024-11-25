@@ -22,7 +22,8 @@ func AggregateTrafficWithService(ctx context.Context, client *mongo.Client, data
 		// Step 1: Lookup to join network traffic with service data
 		bson.D{
 			{Key: "$lookup", Value: bson.D{
-				{Key: "from", Value: "service_collection"},
+				//testCollectionA stores service data and testCollectionB stores network traffic data
+				{Key: "from", Value: "testcollectionA"},
 				{Key: "let", Value: bson.D{
 					{Key: "source_ip", Value: "$source_ip"},
 					{Key: "destination_ip", Value: "$destination_ip"},
